@@ -324,7 +324,7 @@ async def audit_pdf(data: Dict[str, Any], user: Optional[TokenData] = Depends(ge
         return StreamingResponse(
             pdf,
             media_type="application/pdf",
-            headers={"Content-Disposition": f'attachment; filename="biaslens_{data.audit_id}.pdf"'}
+            headers={"Content-Disposition": f'attachment; filename="biaslens_{audit_obj.audit_id}.pdf"'}
         )
     except Exception as e:
         traceback.print_exc()

@@ -2,9 +2,13 @@
 BiasLens — schemas.py (Debugged)
 Pydantic models for strict data validation and API documentation.
 """
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional, Dict, Any, Union
 from enum import Enum
+
+
+class BaseAuditModel(BaseModel):
+    model_config = ConfigDict(extra='ignore')
 
 
 class SeverityLevel(str, Enum):
@@ -14,7 +18,7 @@ class SeverityLevel(str, Enum):
     INFO = "info"
 
 
-class MetricResult(BaseModel):
+class MetricResult(BaseAuditModel):
     name: str
     value: float
     threshold: float
@@ -25,7 +29,7 @@ class MetricResult(BaseModel):
     pass_fail: bool
 
 
-class ProxyVariable(BaseModel):
+class ProxyVariable(BaseAuditModel):
     column: str
     sensitive_attr: str
     correlation: float
@@ -33,7 +37,7 @@ class ProxyVariable(BaseModel):
     description: str
 
 
-class GroupOutcome(BaseModel):
+class GroupOutcome(BaseAuditModel):
     group_name: str
     attribute: str
     selection_rate: float
@@ -41,7 +45,7 @@ class GroupOutcome(BaseModel):
     approved: int
 
 
-class BiasIssue(BaseModel):
+class BiasIssue(BaseAuditModel):
     id: str
     severity: SeverityLevel
     title: str
@@ -53,7 +57,7 @@ class BiasIssue(BaseModel):
     recommendation: str
 
 
-class MitigationStrategy(BaseModel):
+class MitigationStrategy(BaseAuditModel):
     id: str
     title: str
     stage: str  # pre-processing, in-processing, post-processing
@@ -65,7 +69,7 @@ class MitigationStrategy(BaseModel):
     code_snippet: str
 
 
-class DatasetInfo(BaseModel):
+class DatasetInfo(BaseAuditModel):
     total_records: int
     total_features: int
     sensitive_attributes: List[str]
@@ -76,7 +80,7 @@ class DatasetInfo(BaseModel):
     demographic_breakdown: Dict[str, Any] 
 
 
-class AuditSummary(BaseModel):
+class AuditSummary(BaseAuditModel):
     overall_score: int
     total_issues: int
     critical_count: int
@@ -86,7 +90,7 @@ class AuditSummary(BaseModel):
     analysis_time_seconds: float
 
 
-class AuditResponse(BaseModel):
+class AuditResponse(BaseAuditModel):
     audit_id: str
     filename: str
     dataset_info: DatasetInfo
@@ -101,7 +105,7 @@ class AuditResponse(BaseModel):
     created_at: str
 
 
-class MitigationAuditResponse(BaseModel):
+class MitigationAuditResponse(BaseAuditModel):
     original_audit: AuditResponse
     mitigated_audit: AuditResponse
     mitigation_applied: str
@@ -109,20 +113,20 @@ class MitigationAuditResponse(BaseModel):
     mitigated_filename: str
 
 
-class HeatmapData(BaseModel):
+class HeatmapData(BaseAuditModel):
     x_labels: List[str]
     y_labels: List[str]
     matrix: List[List[float]]
 
 
-class AnalyzeRequest(BaseModel):
+class AnalyzeRequest(BaseAuditModel):
     label_column: Optional[str] = None
     sensitive_attributes: Optional[List[str]] = None
     # Any allows for "1", 1, "Approved", etc.
     positive_label: Optional[Any] = 1 
 
 
-class ErrorResponse(BaseModel):
+class ErrorResponse(BaseAuditModel):
     error: str
     detail: Optional[str] = None
     field: Optional[str] = None
