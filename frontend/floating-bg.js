@@ -62,7 +62,7 @@ class FloatingBackground {
             roughness: 0,
             transmission: 1,
             ior: 1.5,
-            colorspace: THREE.SRGBColorSpace,
+            colorSpace: THREE.SRGBColorSpace,
             attenuationColor: new THREE.Color(0xffffff),
             attenuationDistance: 0.5,
         });

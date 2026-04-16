@@ -765,12 +765,12 @@ async function exportPDF(){
   if(!D) return;
   showToast('Generating PDF report...');
   try {
-    const token = window.firebaseGetToken ? await window.firebaseGetToken() : '';
+    const token = window.firebaseGetToken ? await window.firebaseGetToken() : null;
     const r = await fetch(`${API}/api/audit/report`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        ...(token && { 'Authorization': `Bearer ${token}` })
       },
       body: JSON.stringify(D)
     });
